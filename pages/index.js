@@ -1,3 +1,4 @@
+import React, { useState } from 'react'
 import config from '../config.json'
 import styled from 'styled-components'
 import { CSSReset } from '../src/components/CSS.reset'
@@ -5,13 +6,18 @@ import Menu from '../src/components/Menu'
 import { StyledTimeline } from '../src/components/Timeline'
 
 export default function HomePage() {
+  const [valorDoFiltro, setValorDoFiltro] = useState('')
+
   return (
     <>
       <CSSReset />
       <div>
-        <Menu />
+        <Menu
+          valorDoFiltro={valorDoFiltro}
+          setValorDoFiltro={setValorDoFiltro}
+        />
         <Header />
-        <Timeline playlists={config.playlists} />
+        <Timeline valorDoFiltro={valorDoFiltro} playlists={config.playlists} />
       </div>
     </>
   )
@@ -27,15 +33,20 @@ const StyledHeader = styled.div`
   .user_info {
     display: flex;
     align-items: center;
-    margin-top: 60px;
     width: 100%;
     padding: 16px 32px;
     gap: 16px;
   }
 `
+const StyledBanner = styled.div`
+  height: 240px;
+  background-image: url(${config.bg});
+
+`
 function Header() {
   return (
     <StyledHeader>
+      <StyledBanner />
       <section className="user_info">
         <img src={`https://github.com/${config.github}.png`} />
         <div>
@@ -47,7 +58,7 @@ function Header() {
   )
 }
 
-function Timeline(props) {
+function Timeline({ valorDoFiltro, ...props }) {
   const playlistsNames = Object.keys(props.playlists)
 
   return (
@@ -55,17 +66,23 @@ function Timeline(props) {
       {playlistsNames.map((playlistsNames) => {
         const videos = props.playlists[playlistsNames]
         return (
-          <section>
+          <section key={playlistsNames}>
             <h2>{playlistsNames}</h2>
             <div>
-              {videos.map((video) => {
-                return (
-                  <a href={video.url}>
-                    <img src={video.thumb} />
-                    <span>{video.title}</span>
-                  </a>
-                )
-              })}
+              {videos
+                .filter((video) => {
+                  const titleNormaLized = video.title.toLowerCase()
+                  const filtroNormaLized = valorDoFiltro.toLowerCase()
+                  return titleNormaLized.includes(filtroNormaLized)
+                })
+                .map((video) => {
+                  return (
+                    <a key={video.url} href={video.url}>
+                      <img src={video.thumb} />
+                      <span>{video.title}</span>
+                    </a>
+                  )
+                })}
             </div>
           </section>
         )
