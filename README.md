@@ -1,0 +1,3 @@
+# AluraTube
+
+>⚠️ Projeto em andamento, ao finalizar, estarei atualizando...
