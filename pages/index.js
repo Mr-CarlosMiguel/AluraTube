@@ -1,16 +1,14 @@
 import React, { useState } from 'react'
 import config from '../config.json'
 import styled from 'styled-components'
-import { CSSReset } from '../src/components/CSS.reset'
 import Menu from '../src/components/Menu'
-import { StyledTimeline } from '../src/components/Timeline'
+import Timeline from '../src/components/Timeline'
 
 export default function HomePage() {
   const [valorDoFiltro, setValorDoFiltro] = useState('')
 
   return (
     <>
-      <CSSReset />
       <div>
         <Menu
           valorDoFiltro={valorDoFiltro}
@@ -18,12 +16,15 @@ export default function HomePage() {
         />
         <Header />
         <Timeline valorDoFiltro={valorDoFiltro} playlists={config.playlists} />
+        
       </div>
     </>
   )
 }
 
 const StyledHeader = styled.div`
+  background-color: ${({theme}) => theme.backgroundLevel1};
+  
   img {
     width: 80px;
     height: 80px;
@@ -58,35 +59,3 @@ function Header() {
   )
 }
 
-function Timeline({ valorDoFiltro, ...props }) {
-  const playlistsNames = Object.keys(props.playlists)
-
-  return (
-    <StyledTimeline>
-      {playlistsNames.map((playlistsNames) => {
-        const videos = props.playlists[playlistsNames]
-        return (
-          <section key={playlistsNames}>
-            <h2>{playlistsNames}</h2>
-            <div>
-              {videos
-                .filter((video) => {
-                  const titleNormaLized = video.title.toLowerCase()
-                  const filtroNormaLized = valorDoFiltro.toLowerCase()
-                  return titleNormaLized.includes(filtroNormaLized)
-                })
-                .map((video) => {
-                  return (
-                    <a key={video.url} href={video.url}>
-                      <img src={video.thumb} />
-                      <span>{video.title}</span>
-                    </a>
-                  )
-                })}
-            </div>
-          </section>
-        )
-      })}
-    </StyledTimeline>
-  )
-}

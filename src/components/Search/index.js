@@ -40,6 +40,7 @@ export default function Search({ valorDoFiltro, setValorDoFiltro }) {
     <StyledSearch>
       <input
         type="text"
+        placeholder="Pesquisa"
         onChange={(e) => {
           setValorDaBusca(e.target.value)
         }}
